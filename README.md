@@ -1,4 +1,4 @@
-# IBM Cloud Private Alerting with Prometheus
+# IBM Cloud Private - Alerting with Prometheus
 ![](http://nkls.info/wp-content/uploads/2018/06/Screenshot-2018-06-07-16.30.00.png)
 
 
