@@ -19,6 +19,7 @@ First I configured two receivers:
 </BR>
 </BR>
 </BR>
+
 ![](http://nkls.info/wp-content/uploads/2018/06/Screenshot-2018-06-07-16.38.32.png)
 
 ### Slack
@@ -39,6 +40,7 @@ This is handled by the slack receiver.
 Replace the *yourICPClusterAddress* address with the real ingress IP of your ICP Cluster.
 
 </BR>
+
 ![](http://nkls.info/wp-content/uploads/2018/06/Screenshot-2018-06-07-16.37.39.png)
 
 ### IBM Cloud Event Management
@@ -77,6 +79,7 @@ Typically for testing purposes you would want to chose much shorter group- and r
  
 </BR>
 <HR>
+    
 # RULES
 Now on to the more challenging part - the new rule format.
 You can read up on this [here](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/).
@@ -109,6 +112,7 @@ groups:
 Not complete rocket science but takes some time to convert and test it out.
 
 </BR>
+
 ## Example rules
 
 So to give you a starting point and get you of the ground, you might want to start with this set of rules:
@@ -152,6 +156,7 @@ Again, adapt the thresholds to your likings/needs.
 
 </BR>
 </BR>
+
 # Putting it all together
 So to implement those alerts, basically you'll have to update two ConfigMaps in ICP.
 
@@ -167,6 +172,7 @@ Now you can either modify them by hand by clicking on the action handle to the v
 Or you can just select "Create Resource" in the top menu and paste the two followind scripts one after another.
 
 </BR>
+
 ## Update Alert Rules
 To modify the monitoring-prometheus-alertrules ConfigMap
 
@@ -216,6 +222,7 @@ data:
 ```
 
 </BR>
+
 ## Update Alert Routes
 And to modify the monitoring-prometheus-alertmanager ConfigMap
 
@@ -271,6 +278,7 @@ and verify that the rules have been loaded.
 
 
 </BR>
+
 ## Create Load
 
 If you like to test the CPU rule firing you can do the following:
