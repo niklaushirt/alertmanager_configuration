@@ -169,7 +169,7 @@ To do this:
 Now you can either modify them by hand by clicking on the action handle to the very right (three small vertical points)
 
 
-Or you can just select "Create Resource" in the top menu and paste the two followind scripts one after another.
+Or you can just select "Create Resource" in the top menu and paste the two following scripts one after another.
 
 </BR>
 
