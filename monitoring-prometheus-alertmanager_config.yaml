@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: monitoring-prometheus
+    component: alertmanager
+  name: monitoring-prometheus-alertmanager
+  namespace: kube-system
+data:
+  alertmanager.yml: |-
+    global:
+      resolve_timeout: 20s
+      slack_api_url: 'https://hooks.slack.com/services/xxx/yyy/zzz'
+
+    receivers:
+      - name: 'webhook'
+        webhook_configs:
+          - send_resolved: true
+            url: 'https://cem-normalizer-us-south.opsmgmt.bluemix.net/webhook/prometheus/xxx/yyy/zzz'
+      - name: 'slack-notifications'
+        slack_configs:
+        - channel: '#ibmcloudprivate'
+          text: 'Nodes: {{ range .Alerts }}{{ .Labels.instance }} {{ end }}      ---- Summary: {{ .CommonAnnotations.summary }}      ---- Description: {{ .CommonAnnotations.description }}       ---- https://9.30.189.183:8443/prometheus/alerts '
+    route:
+      receiver: webhook
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 3h
+    route:
+      receiver: 'slack-notifications'
+      group_by: [alertname, datacenter, app]
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 1m
