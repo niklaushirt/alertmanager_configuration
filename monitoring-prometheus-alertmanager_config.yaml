@@ -10,25 +10,26 @@ data:
   alertmanager.yml: |-
     global:
       resolve_timeout: 20s
-      slack_api_url: 'https://hooks.slack.com/services/xxx/yyy/zzz'
-
-    receivers:
-      - name: 'webhook'
-        webhook_configs:
-          - send_resolved: true
-            url: 'https://cem-normalizer-us-south.opsmgmt.bluemix.net/webhook/prometheus/xxx/yyy/zzz'
-      - name: 'slack-notifications'
-        slack_configs:
-        - channel: '#ibmcloudprivate'
-          text: 'Nodes: {{ range .Alerts }}{{ .Labels.instance }} {{ end }}      ---- Summary: {{ .CommonAnnotations.summary }}      ---- Description: {{ .CommonAnnotations.description }}       ---- https://9.30.189.183:8443/prometheus/alerts '
+      slack_api_url: 'https://hooks.slack.com/services/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'
     route:
       receiver: webhook
-      group_wait: 10s
-      group_interval: 5m
-      repeat_interval: 3h
-    route:
-      receiver: 'slack-notifications'
-      group_by: [alertname, datacenter, app]
+      group_by: [alertname, instance, severity]
       group_wait: 10s
       group_interval: 10s
       repeat_interval: 1m
+      routes:
+      - receiver: webhook
+        continue: true
+      - receiver: slack_alerts
+        continue: true
+
+    receivers:
+    - name: webhook
+      webhook_configs:
+      - send_resolved: false
+        url: 'https://cem-normalizer-us-south.opsmgmt.bluemix.net/webhook/prometheus/2d1b4ceb-138b-445e-b6a3-2ac3c54e4d81/a0183da8-1b1c-4695-865e-0c67e3cae766/FlL4XAzm0mk-MZewx0AcwFK40oswSLuOkRcFh2BlXz0'
+    - name: slack_alerts
+      slack_configs:
+      - send_resolved: false
+        channel: '#ibmcloudprivate'
+        text: 'Nodes: {{ range .Alerts }}{{ .Labels.instance }} {{ end }}      ---- Summary: {{ .CommonAnnotations.summary }}      ---- Description: {{ .CommonAnnotations.description }}       ---- https://9.30.189.183:8443/prometheus/alerts '
