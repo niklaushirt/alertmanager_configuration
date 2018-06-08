@@ -29,7 +29,9 @@ This is handled by the slack receiver.
 ```yaml
     global:
       slack_api_url: 'https://hooks.slack.com/services/xxxx/yyyy/zzzz'
-
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 1m
 ....
 
         slack_configs:
@@ -61,17 +63,11 @@ The URL can be obtained directly in the web interface under:
 Then we define the two routes pulling in both receivers:
 
 ```yaml
-   route:
-      receiver: webhook
-      group_wait: 10s
-      group_interval: 5m
-      repeat_interval: 1h
-    route:
-      receiver: 'slack-notifications'
-      group_by: [alertname, datacenter, app]
-      group_wait: 10s
-      group_interval: 5m
-      repeat_interval: 1h
+    routes:
+      - receiver: webhook
+        continue: true
+      - receiver: slack_alerts
+        continue: true
 ```
 
 You can configure the timing parts to your likings.
@@ -240,27 +236,28 @@ data:
     global:
       resolve_timeout: 20s
       slack_api_url: 'https://hooks.slack.com/services/xxx/yyy/zzz'
-
-    receivers:
-      - name: 'webhook'
-        webhook_configs:
-          - send_resolved: true
-            url: 'https://cem-normalizer-us-south.opsmgmt.bluemix.net/webhook/prometheus/xxx/yyy/zzz'
-      - name: 'slack-notifications'
-        slack_configs:
-        - channel: '#ibmcloudprivate'
-          text: 'Nodes: {{ range .Alerts }}{{ .Labels.instance }} {{ end }}      ---- Summary: {{ .CommonAnnotations.summary }}      ---- Description: {{ .CommonAnnotations.description }}       ---- https://*yourICPClusterAddress*:8443/prometheus/alerts '
     route:
       receiver: webhook
+      group_by: [alertname, instance, severity]
       group_wait: 10s
-      group_interval: 5m
-      repeat_interval: 1h
-    route:
-      receiver: 'slack-notifications'
-      group_by: [alertname, datacenter, app]
-      group_wait: 10s
-      group_interval: 5m
-      repeat_interval: 1h
+      group_interval: 10s
+      repeat_interval: 1m
+      routes:
+      - receiver: webhook
+        continue: true
+      - receiver: slack_alerts
+        continue: true
+
+    receivers:
+    - name: webhook
+      webhook_configs:
+      - send_resolved: false
+        url: 'https://cem-normalizer-us-south.opsmgmt.bluemix.net/webhook/prometheus/xxx/yyy/zzz'
+    - name: slack_alerts
+      slack_configs:
+      - send_resolved: false
+        channel: '#ibmcloudprivate'
+        text: 'Nodes: {{ range .Alerts }}{{ .Labels.instance }} {{ end }}      ---- Summary: {{ .CommonAnnotations.summary }}      ---- Description: {{ .CommonAnnotations.description }}       ---- https://9.30.189.183:8443/prometheus/alerts '
 ```
 
 
