@@ -10,7 +10,7 @@ data:
   alertmanager.yml: |-
     global:
       resolve_timeout: 20s
-      slack_api_url: 'https://hooks.slack.com/services/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'
+      slack_api_url: 'https://hooks.slack.com/services/xxx/yyy/zzz'
     route:
       receiver: webhook
       group_by: [alertname, instance, severity]
@@ -27,7 +27,7 @@ data:
     - name: webhook
       webhook_configs:
       - send_resolved: false
-        url: 'https://cem-normalizer-us-south.opsmgmt.bluemix.net/webhook/prometheus/2d1b4ceb-138b-445e-b6a3-2ac3c54e4d81/a0183da8-1b1c-4695-865e-0c67e3cae766/FlL4XAzm0mk-MZewx0AcwFK40oswSLuOkRcFh2BlXz0'
+        url: 'https://cem-normalizer-us-south.opsmgmt.bluemix.net/webhook/prometheus/xxx/yyy/zzz'
     - name: slack_alerts
       slack_configs:
       - send_resolved: false
